@@ -26,10 +26,7 @@ namespace NotesApp.ViewModel.Commands
 
         public bool CanExecute(object parameter)
         {
-            var selectedNotebook = parameter as Notebook;
-            if (selectedNotebook != null)
-                return true;
-            return false;
+            return true;
         }
 
         public void Execute(object parameter)

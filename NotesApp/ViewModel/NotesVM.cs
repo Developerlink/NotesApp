@@ -135,18 +135,21 @@ namespace NotesApp.ViewModel
 
         public void DeleteNotebook()
         {
-            // Deleting all associated notes to the notebook first.
-            foreach (var note in Notes)
+            if (SelectedNotebook != null)
             {
-                if (note.NotebookId == SelectedNotebook.Id)
-                    DatabaseHelper.Delete(note);
+                // Deleting all associated notes to the notebook first.
+                foreach (var note in Notes)
+                {
+                    if (note.NotebookId == SelectedNotebook.Id)
+                        DatabaseHelper.Delete(note);
+                }
+                // Deleting the notebook itself.
+                DatabaseHelper.Delete(SelectedNotebook);
+                // Unselect notebook and refresh list of notebooks and notes.
+                SelectedNotebook = null;
+                ReadNotebooks();
+                ReadNotes();
             }
-            // Deleting the notebook itself.
-            DatabaseHelper.Delete(SelectedNotebook);            
-            // Unselect notebook and refresh list of notebooks and notes.
-            SelectedNotebook = null;
-            ReadNotebooks();
-            ReadNotes();
         }
 
         public void ReadNotebooks()

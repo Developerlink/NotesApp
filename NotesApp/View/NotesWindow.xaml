@@ -110,8 +110,9 @@
                         </StackPanel>
                         <Grid.ContextMenu>
                             <ContextMenu>
-                                <MenuItem Header="Rename"
-                                          Command="{Binding Source={StaticResource vm}, Path=BeginEditNoteCommand}" />
+                                <MenuItem Header="Delete "
+                                          Command="{Binding Source={StaticResource vm}, Path=DeleteNoteCommand}"
+                                          CommandParameter="{Binding}" />
                             </ContextMenu>
                         </Grid.ContextMenu>
                     </Grid>

@@ -99,6 +99,7 @@
     <Compile Include="ViewModel\Commands\BeginEditCommand.cs" />
     <Compile Include="ViewModel\Commands\BeginEditNoteCommand.cs" />
     <Compile Include="ViewModel\Commands\DeleteNotebookCommand.cs" />
+    <Compile Include="ViewModel\Commands\DeleteNoteCommand.cs" />
     <Compile Include="ViewModel\Commands\ExistingAccountCommand.cs" />
     <Compile Include="ViewModel\Commands\IsEditedCommand.cs" />
     <Compile Include="ViewModel\Commands\IsEditedNoteCommand.cs" />

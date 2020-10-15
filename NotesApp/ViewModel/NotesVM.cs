@@ -76,6 +76,8 @@ namespace NotesApp.ViewModel
 
         public DeleteNotebookCommand DeleteNotebookCommand { get; set; }
 
+        public DeleteNoteCommand DeleteNoteCommand { get; set; }
+
         public BeginEditCommand BeginEditCommand { get; set; }
 
         public IsEditedCommand IsEditedCommand { get; set; }
@@ -91,6 +93,7 @@ namespace NotesApp.ViewModel
             NewNotebookCommand = new NewNotebookCommand(this);
             NewNoteCommand = new NewNoteCommand(this);
             DeleteNotebookCommand = new DeleteNotebookCommand(this);
+            DeleteNoteCommand = new DeleteNoteCommand(this);
             BeginEditCommand = new BeginEditCommand(this);
             IsEditedCommand = new IsEditedCommand(this);
             BeginEditNoteCommand = new BeginEditNoteCommand(this);
@@ -148,6 +151,16 @@ namespace NotesApp.ViewModel
                 // Unselect notebook and refresh list of notebooks and notes.
                 SelectedNotebook = null;
                 ReadNotebooks();
+                ReadNotes();
+            }
+        }
+
+        public void DeleteNote()
+        {
+            if(SelectedNote != null)
+            {
+                DatabaseHelper.Delete(SelectedNote);
+                SelectedNote = null;
                 ReadNotes();
             }
         }

@@ -7,6 +7,7 @@
         xmlns:vm="clr-namespace:NotesApp.ViewModel"
         mc:Ignorable="d"
         Title="Authenthentication Window"
+        Icon="notes.ico"
         Height="375"
         Width="300"
         Closing="Window_Closing">

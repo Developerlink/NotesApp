@@ -20,11 +20,25 @@ namespace NotesApp.ViewModel
         public bool IsEditing
         {
             get { return isEditing; }
-            set { 
+            set
+            {
                 isEditing = value;
                 OnPropertyChanged("IsEditing");
             }
         }
+
+        private bool isEditingNote;
+
+        public bool IsEditingNote
+        {
+            get { return isEditingNote; }
+            set
+            {
+                isEditingNote = value;
+                OnPropertyChanged("IsEditingNote");
+            }
+        }
+
 
         public ObservableCollection<Notebook> Notebooks { get; set; }
 
@@ -43,13 +57,15 @@ namespace NotesApp.ViewModel
 
         public ObservableCollection<Note> Notes { get; set; }
 
-        private Note selectedNote;        
+        private Note selectedNote;
 
         public Note SelectedNote
         {
             get { return selectedNote; }
-            set { 
+            set
+            {
                 selectedNote = value;
+                OnPropertyChanged("SelectedNote");
                 SelectedNoteChanged(this, new EventArgs());
             }
         }
@@ -64,14 +80,21 @@ namespace NotesApp.ViewModel
 
         public IsEditedCommand IsEditedCommand { get; set; }
 
+        public BeginEditNoteCommand BeginEditNoteCommand { get; set; }
+
+        public IsEditedNoteCommand IsEditedNoteCommand { get; set; }
+
         public NotesVM()
         {
             IsEditing = false;
+            IsEditingNote = false;
             NewNotebookCommand = new NewNotebookCommand(this);
             NewNoteCommand = new NewNoteCommand(this);
             DeleteNotebookCommand = new DeleteNotebookCommand(this);
             BeginEditCommand = new BeginEditCommand(this);
             IsEditedCommand = new IsEditedCommand(this);
+            BeginEditNoteCommand = new BeginEditNoteCommand(this);
+            IsEditedNoteCommand = new IsEditedNoteCommand(this);
 
             Notebooks = new ObservableCollection<Notebook>();
             Notes = new ObservableCollection<Note>();
@@ -147,18 +170,33 @@ namespace NotesApp.ViewModel
             }
         }
 
-         public void StartEditing()
+        public void StartEditing()
         {
             IsEditing = true;
         }
 
+        public void StartEditingNote()
+        {
+            IsEditingNote = true;
+        }
+
         public void IsEdited(Notebook notebook)
         {
-            if(notebook != null)
+            if (notebook != null)
             {
                 DatabaseHelper.Update(notebook);
                 IsEditing = false;
                 ReadNotebooks();
+            }
+        }
+
+        public void IsEditedNote(Note note)
+        {
+            if (SelectedNote != null)
+            {
+                DatabaseHelper.Update(note);
+                IsEditingNote = false;
+                ReadNotes();
             }
         }
 
@@ -167,7 +205,7 @@ namespace NotesApp.ViewModel
             DatabaseHelper.Update(SelectedNote);
         }
 
-        public event EventHandler SelectedNoteChanged;   
+        public event EventHandler SelectedNoteChanged;
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void OnPropertyChanged(string propertyName)

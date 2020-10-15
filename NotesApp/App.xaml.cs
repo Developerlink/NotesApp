@@ -18,6 +18,7 @@ namespace NotesApp
 
     }
 
+    // <a target="_blank" href="https://icons8.com/icons/set/moleskine">Moleskine icon</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a>
 
 
     // <uc:NotebookControl Notebook="{Binding UpdateSourceTrigger=PropertyChanged}"/>

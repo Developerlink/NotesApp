@@ -31,7 +31,8 @@ namespace NotesApp.View
         {
             InitializeComponent();
 
-            viewModel = new NotesVM();
+            // Using the vm from the xaml as the same vm in codebehind.
+            viewModel = this.Resources["vm"] as NotesVM;
             container.DataContext = viewModel;
             viewModel.SelectedNoteChanged += ViewModel_SelectedNoteChanged;
 
@@ -162,7 +163,6 @@ namespace NotesApp.View
             {
                 if (viewModel.SelectedNote != null)
                 {
-
                     string rtfFile = System.IO.Path.Combine(Environment.CurrentDirectory, $"files/{viewModel.SelectedNote.Id}-{viewModel.SelectedNote.Title}.rtf");
                     viewModel.SelectedNote.FileLocation = rtfFile;
 

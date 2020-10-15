@@ -11,14 +11,16 @@
         xmlns:uc="clr-namespace:NotesApp.View.UserControls"
         xmlns:cv="clr-namespace:NotesApp.ViewModel.Converters"
         mc:Ignorable="d"
-        Title="NotesWindow"
+        Title="Notes"
+        Icon="notes.ico"
         Height="500"
         Width="800">
     <Window.Resources>
         <vm:NotesVM x:Key="vm" />
         <cv:BoolToVisibilityConverter x:Key="boolToVis" />
         <uc:NoteControl x:Key="noteControl" />
-        <CollectionViewSource x:Key="SortedFontsCollection" Source="{Binding Source={x:Static Fonts.SystemFontFamilies}}" >
+        <CollectionViewSource x:Key="SortedFontsCollection"
+                              Source="{Binding Source={x:Static Fonts.SystemFontFamilies}}">
             <CollectionViewSource.SortDescriptions>
                 <ComponentModel:SortDescription PropertyName="Source" />
             </CollectionViewSource.SortDescriptions>
@@ -62,18 +64,7 @@
                                    Margin="10"
                                    FontSize="15"
                                    FontWeight="DemiBold"
-                                   VerticalAlignment="Center" />
-                        <TextBox Text="{Binding Name, Mode=TwoWay}"
-                                 TextWrapping="Wrap"
-                                 Visibility="{Binding Source={StaticResource vm}, Path=IsEditing, Converter={StaticResource boolToVis}}">
-                            <b:Interaction.Triggers>
-                                <b:EventTrigger EventName="LostFocus">
-                                    <b:InvokeCommandAction Command="{Binding Source={StaticResource vm}, Path=IsEditedCommand}"
-                                                           CommandParameter="{Binding}" />
-                                </b:EventTrigger>
-                            </b:Interaction.Triggers>
-                        </TextBox>
-
+                                   VerticalAlignment="Center" />    
                         <Grid.ContextMenu>
                             <ContextMenu>
                                 <MenuItem Header="Rename"
@@ -93,7 +84,27 @@
                   PreviewKeyDown="NoteList_OnPreviewKeyDown">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <uc:NoteControl Note="{Binding}" />
+                    <Grid>
+                        <StackPanel>
+                            <TextBlock x:Name="noteTitleTextBlock"
+                                       Text="{Binding Title}"
+                                       TextTrimming="CharacterEllipsis"
+                                       Foreground="White"
+                                       Margin="0 5 0 0"
+                                       FontWeight="DemiBold"
+                                       FontSize="15" />
+                            <TextBlock x:Name="noteEditedTextBlock"
+                                       Text="{Binding UpdatedTime, StringFormat='{}{0:dd/MM/yyyy}'}"
+                                       Foreground="DodgerBlue"
+                                       FontSize="13" />
+                        </StackPanel>
+                        <Grid.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Rename"
+                                          Command="{Binding Source={StaticResource vm}, Path=BeginEditNoteCommand}" />
+                            </ContextMenu>
+                        </Grid.ContextMenu>
+                    </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
@@ -129,11 +140,16 @@
                         Content="Save" />
             </ToolBar>
         </ToolBarTray>
-        <Grid>
+        <StackPanel>
+            <TextBox Margin="10"
+                     Text="{Binding SelectedNote.Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             <RichTextBox x:Name="contentRichTextBox"
                          TextChanged="ContentRichTextBox_TextChanged"
                          PreviewKeyDown="Textbox_OnPreviewKeyDown"
-                         SelectionChanged="ContentRichTextBox_SelectionChanged" />
-        </Grid>
+                         SelectionChanged="ContentRichTextBox_SelectionChanged"
+                         Height="350"
+                         Padding="5"
+                         ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+        </StackPanel>
     </DockPanel>
 </Window>

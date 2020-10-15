@@ -33,10 +33,7 @@
                           Command="{Binding NewNotebookCommand}" />
                 <MenuItem Header="New note"
                           Command="{Binding NewNoteCommand}"
-                          CommandParameter="{Binding SelectedNotebook}" />
-                <MenuItem Header="Delete notebook"
-                          Command="{Binding DeleteNotebookCommand}"
-                          CommandParameter="{Binding SelectedNotebook}" />
+                          CommandParameter="{Binding SelectedNotebook}" />                
                 <Separator />
                 <MenuItem Header="Exit"
                           Click="MenuItem_Click" />
@@ -69,6 +66,9 @@
                             <ContextMenu>
                                 <MenuItem Header="Rename"
                                           Command="{Binding Source={StaticResource vm}, Path=BeginEditCommand}" />
+                                <MenuItem Header="Delete "
+                                          Command="{Binding Source={StaticResource vm}, Path=DeleteNotebookCommand}"
+                                          CommandParameter="{Binding}" />
                             </ContextMenu>
                         </Grid.ContextMenu>
                     </Grid>
@@ -140,8 +140,9 @@
                         Content="Save" />
             </ToolBar>
         </ToolBarTray>
-        <StackPanel>
+        <StackPanel >
             <TextBox Margin="10"
+                     Name="contentTitleTextBox"
                      Text="{Binding SelectedNote.Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             <RichTextBox x:Name="contentRichTextBox"
                          TextChanged="ContentRichTextBox_TextChanged"

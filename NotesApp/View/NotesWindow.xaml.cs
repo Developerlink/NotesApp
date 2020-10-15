@@ -159,7 +159,7 @@ namespace NotesApp.View
 
         private void SaveFileButton_Click(object sender, RoutedEventArgs e)
         {
-            if (contentRichTextBox.IsFocused == true)
+            if (contentRichTextBox.IsFocused == true || contentTitleTextBox.IsFocused == true)
             {
                 if (viewModel.SelectedNote != null)
                 {

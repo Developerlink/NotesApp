@@ -14,7 +14,8 @@
         Title="Notes"
         Icon="notes.ico"
         Height="500"
-        Width="800">
+        Width="800"
+        PreviewKeyDown="Window_PreviewKeyDown">
     <Window.Resources>
         <vm:NotesVM x:Key="vm" />
         <cv:BoolToVisibilityConverter x:Key="boolToVis" />
@@ -26,31 +27,31 @@
             </CollectionViewSource.SortDescriptions>
         </CollectionViewSource>
     </Window.Resources>
-    <DockPanel x:Name="container">
+    <DockPanel x:Name="container">        
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="File">
                 <MenuItem Header="New notebook"
-                          Command="{Binding NewNotebookCommand}" />
-                <MenuItem Header="New note"
-                          Command="{Binding NewNoteCommand}"
-                          CommandParameter="{Binding SelectedNotebook}" />                
+                          Command="{Binding NewNotebookCommand}" />                        
                 <Separator />
                 <MenuItem Header="Exit"
                           Click="MenuItem_Click" />
             </MenuItem>
-        </Menu>
+        </Menu>        
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem>
                 <TextBlock x:Name="StatusTextBox" />
             </StatusBarItem>
-        </StatusBar>
+        </StatusBar>        
+        
         <ListView ItemsSource="{Binding Notebooks, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                  SelectedItem="{Binding SelectedNotebook, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                  SelectedItem="{Binding SelectedNotebook, UpdateSourceTrigger=PropertyChanged}"
+                  x:Name="notebookListView"
                   Width="160"
                   ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                   DockPanel.Dock="Left"
                   Background="#212121"
-                  PreviewKeyDown="NotebookList_OnPreviewKeyDown">
+                  PreviewMouseRightButtonDown="ListView_MouseRightButtonDown"
+                  PreviewKeyDown="NotebookListView_PreviewKeyDown">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <Grid>
@@ -64,34 +65,36 @@
                                    VerticalAlignment="Center" />
                         <TextBox Text="{Binding Name, Mode=TwoWay}"
                                  TextWrapping="Wrap"
-                                 Visibility="{Binding Source={StaticResource vm}, Path=IsEditing, Converter={StaticResource boolToVis}}">
-                            <b:Interaction.Triggers>
-                                <b:EventTrigger EventName="LostFocus">
-                                    <b:InvokeCommandAction Command="{Binding Source={StaticResource vm}, Path=IsEditedCommand}"
-                                                           CommandParameter="{Binding}" />
-                                </b:EventTrigger>
-                            </b:Interaction.Triggers>
+                                 Visibility="{Binding Source={StaticResource vm}, Path=IsEditing, Converter={StaticResource boolToVis}}"
+                                 PreviewKeyDown="TextBox_PreviewKeyDown">
                         </TextBox>
                         <Grid.ContextMenu>
                             <ContextMenu>
                                 <MenuItem Header="Rename"
                                           Command="{Binding Source={StaticResource vm}, Path=BeginEditCommand}" />
+                                <MenuItem Header="New note"
+                                          Command="{Binding Source={StaticResource vm}, Path=NewNoteCommand}"
+                                          CommandParameter="{Binding}" />
+                                <Separator />
                                 <MenuItem Header="Delete "
                                           Command="{Binding Source={StaticResource vm}, Path=DeleteNotebookCommand}"
                                           CommandParameter="{Binding}" />
                             </ContextMenu>
-                        </Grid.ContextMenu>
+                        </Grid.ContextMenu>                        
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <ListView ItemsSource="{Binding Notes}"
+        
+        <ListView x:Name="noteListView" 
+                  ItemsSource="{Binding Notes}"
                   SelectedItem="{Binding SelectedNote}"
                   ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                   Width="160"
                   DockPanel.Dock="Left"
                   Background="#212121"
-                  PreviewKeyDown="NoteList_OnPreviewKeyDown">
+                  PreviewKeyDown="NoteList_OnPreviewKeyDown"
+                  MouseRightButtonDown="ListView_MouseRightButtonDown">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <Grid>
@@ -119,6 +122,7 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
+        
         <ToolBarTray DockPanel.Dock="Top">
             <ToolBar>
                 <ToggleButton x:Name="boldButton"

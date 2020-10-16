@@ -52,6 +52,7 @@ namespace NotesApp.ViewModel
                 selectedNotebook = value;
                 OnPropertyChanged("SelectedNotebook");
                 ReadNotes();
+                SelectedNote = null;
             }
         }
 
@@ -129,7 +130,7 @@ namespace NotesApp.ViewModel
                 NotebookId = notebookId,
                 CreatedTime = DateTime.Now,
                 UpdatedTime = DateTime.Now,
-                Title = "The elephant sleeps and the tiger snoors."
+                Title = "New note"
             };
 
             DatabaseHelper.Insert(newNote);

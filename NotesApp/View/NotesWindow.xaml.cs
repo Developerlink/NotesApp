@@ -1,4 +1,5 @@
-﻿using NotesApp.ViewModel;
+﻿using NotesApp.Model;
+using NotesApp.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -25,16 +26,16 @@ namespace NotesApp.View
     /// </summary>
     public partial class NotesWindow : Window
     {
-        NotesVM viewModel;
+        NotesVM vm;
 
         public NotesWindow()
         {
             InitializeComponent();
 
             // Using the vm from the xaml as the same vm in codebehind.
-            viewModel = this.Resources["vm"] as NotesVM;
-            container.DataContext = viewModel;
-            viewModel.SelectedNoteChanged += ViewModel_SelectedNoteChanged;
+            vm = this.Resources["vm"] as NotesVM;
+            container.DataContext = vm;
+            vm.SelectedNoteChanged += ViewModel_SelectedNoteChanged;
 
             SetKeyCombinations();
         }
@@ -147,9 +148,9 @@ namespace NotesApp.View
         private void ViewModel_SelectedNoteChanged(object sender, EventArgs e)
         {
             contentRichTextBox.Document.Blocks.Clear();
-            if (viewModel.SelectedNote != null && !string.IsNullOrEmpty(viewModel.SelectedNote.FileLocation))
+            if (vm.SelectedNote != null && !string.IsNullOrEmpty(vm.SelectedNote.FileLocation))
             {
-                using (FileStream fileStream = new FileStream(viewModel.SelectedNote.FileLocation, FileMode.Open))
+                using (FileStream fileStream = new FileStream(vm.SelectedNote.FileLocation, FileMode.Open))
                 {
                     TextRange range = new TextRange(contentRichTextBox.Document.ContentStart, contentRichTextBox.Document.ContentEnd);
                     range.Load(fileStream, DataFormats.Rtf);
@@ -161,10 +162,10 @@ namespace NotesApp.View
         {
             if (contentRichTextBox.IsFocused == true || contentTitleTextBox.IsFocused == true)
             {
-                if (viewModel.SelectedNote != null)
+                if (vm.SelectedNote != null)
                 {
-                    string rtfFile = System.IO.Path.Combine(Environment.CurrentDirectory, $"files/{viewModel.SelectedNote.Id}-{viewModel.SelectedNote.Title}.rtf");
-                    viewModel.SelectedNote.FileLocation = rtfFile;
+                    string rtfFile = System.IO.Path.Combine(Environment.CurrentDirectory, $"files/{vm.SelectedNote.Id}-{vm.SelectedNote.Title}.rtf");
+                    vm.SelectedNote.FileLocation = rtfFile;
 
                     using (FileStream fileStream = new FileStream(rtfFile, FileMode.Create))
                     {
@@ -173,12 +174,12 @@ namespace NotesApp.View
                         MessageBox.Show("File has been saved");
                     }
 
-                    viewModel.UpdateSelectedNote();
+                    vm.UpdateSelectedNote();
                 }
             }
         }
 
-        
+
 
         private void NotebookList_OnPreviewKeyDown(object sender, KeyEventArgs e)
         {
@@ -203,5 +204,109 @@ namespace NotesApp.View
                 MessageBox.Show("You just made the key combination ctrl+1 from the textbox");
             }
         }
+
+        private void TextBox_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (vm.SelectedNotebook != null)
+            {
+                if (Keyboard.IsKeyDown(Key.Enter))
+                {
+                    //MessageBox.Show(vm.SelectedNotebook.Name);
+                    vm.IsEdited(vm.SelectedNotebook);
+                }
+            }
+        }
+
+        private void NoteTitleTextBlock_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+
+            var notebook = sender as Notebook;
+            MessageBox.Show(notebook.Name);
+        }
+
+        private void ListView_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {            
+            Notebook notebook = (Notebook)notebookListView.SelectedItem;
+            if(notebook != null)
+            {
+             contentRichTextBox.AppendText(notebook.Name);
+            }
+        }
+
+        private void ContextMenu_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+
+        }
+
+        // Key shortcuts for window and notebooklist
+        private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (notebookListView.SelectedValue == null && noteListView.SelectedValue == null && contentRichTextBox.IsFocused == false)
+            {
+                // Ctrl + n + b
+                if (Keyboard.Modifiers == ModifierKeys.Control && Keyboard.IsKeyDown(Key.N) && Keyboard.IsKeyDown(Key.B))
+                {
+                    //MessageBox.Show($"{ModifierKeys.Control} + {Key.N}");
+                    vm.CreateNotebook();
+                }
+
+                // Tab + down
+                if (Keyboard.IsKeyDown(Key.Tab) && Keyboard.IsKeyDown(Key.Down))
+                {
+                    //MessageBox.Show($"{Key.Tab} + {Key.Down}");
+                    if (notebookListView.Items.Count > 0)
+                    {
+                        notebookListView.SelectedItem = notebookListView.Items[0];
+                        notebookListView.Focus();
+                    }
+                }
+
+                // Escape
+                if (Keyboard.IsKeyDown(Key.Escape))
+                {
+                    if (MessageBox.Show("Do you want to close this app?", "Confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes)                       
+                    {
+                        Application.Current.Shutdown();
+                    }
+                }
+            }
+        }
+
+        // Key shortcuts for notebooklist
+        private void NotebookListView_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (notebookListView.SelectedValue != null && noteListView.SelectedValue == null && contentRichTextBox.IsFocused == false)
+            {
+                // Tab + right
+                if (Keyboard.Modifiers == ModifierKeys.Shift && Keyboard.IsKeyDown(Key.Right))
+                {
+                    //MessageBox.Show($"{ModifierKeys.Shift} + {Key.Right}");
+                }
+
+                // Ctrl + n
+                if (Keyboard.Modifiers == ModifierKeys.Control && Keyboard.IsKeyDown(Key.N))
+                {
+                    //MessageBox.Show($"{ModifierKeys.Control} + {Key.N}");
+                }
+                    
+                // F2
+                if (Keyboard.IsKeyDown(Key.F2))
+                {
+                    //MessageBox.Show($"{Key.F2}");
+                }
+
+                // Delete
+                if (Keyboard.IsKeyDown(Key.Delete))
+                {
+                    //MessageBox.Show($"{Key.Delete}");
+                }
+            }
+        }
+
+
+        // Key shortcuts for notelist
+
+        // Key shortcuts for texteditor
+
     }
 }

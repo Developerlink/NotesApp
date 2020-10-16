@@ -1,8 +1,10 @@
-﻿using System;
+﻿using NotesApp.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace NotesApp.ViewModel.Commands
@@ -25,6 +27,7 @@ namespace NotesApp.ViewModel.Commands
 
         public void Execute(object parameter)
         {
+            VM.SelectedNotebook = parameter as Notebook;
             VM.StartEditing();
         }
     }

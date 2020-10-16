@@ -21,13 +21,28 @@ namespace NotesApp
     // <a target="_blank" href="https://icons8.com/icons/set/moleskine">Moleskine icon</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a>
 
 
-    // <uc:NotebookControl Notebook="{Binding UpdateSourceTrigger=PropertyChanged}"/>
-    // The above does not update after renaming a notebook. Notebook control not used until it has been solved
-    // TODO: MVVM login
-    // TODO: MVVM notes
+    //x TODO: MVVM login
+    //x TODO: MVVM notes
     // Can't make anything MVVM...
+    //x TODO: Add crud to notes
+    // TODO: Add ctrl + n to create new notebook
+    // TODO: Add tab + down to jump to notebooklist
+    // TODO: Add escape to exit program
+
+    // TODO: Add tab + right to jump to notelist if notebook is selected
+    // TODO: Add F2 to rename
+    // TODO: Add Enter key to rename notebook
+    // TODO: Add delete to delete notebook
+    // TODO: Add ctrl + n to create new note
+
+    // TODO: Add F2 to rename (from both notelist and text editor)
+    // TODO: Add Enter to jump into note text editor
+    // TODO: Add ctrl + s to save changes to note
+    // TODO: Add delete to delete notebook
 
 
-    // TODO: Add crud to notes
-    // TODO: Add short cut keys to app
+    //!? <uc:NotebookControl Notebook="{Binding UpdateSourceTrigger=PropertyChanged}"/>
+    //!? The above does not update after renaming a notebook. Notebook control not used until it has been solved
+    //!? Rename for notebook requires a left mouseclick first if using the mouse, before the right click. This is not optimal. 
+
 }
